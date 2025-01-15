@@ -110,13 +110,26 @@ int Base64Class::encodedLength(int plainLength) {
 }
 
 int Base64Class::decodedLength(char * input, int inputLength) {
-	int i = 0;
-	int numEq = 0;
-	for(i = inputLength - 1; input[i] == '='; i--) {
-		numEq++;
+	// Check if the input string ends with at most two '=' characters
+	int originalLength = inputLength;
+	while(originalLength > 0 && input[originalLength - 1] == '=')
+	{
+		originalLength--;
 	}
+	if (inputLength - originalLength > 2)
+	{
+		return -1;
+	}
+	else
+	{
+		int i = 0;
+		int numEq = 0;
+		for(i = inputLength - 1; input[i] == '=' && i >= 0; i--) {
+			numEq++;
+		}
 
-	return ((6 * inputLength) / 8) - numEq;
+		return ((6 * inputLength) / 8) - numEq;
+	}
 }
 
 //Private utility functions
